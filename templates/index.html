@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Content Q&A</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: auto;
+            text-align: center;
+            padding-top: 50px;
+        }
+        textarea, input {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        #loading {
+            display: none;
+            color: red;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Web Content Q&A</h2>
+    <input type="text" id="url" placeholder="Enter webpage URL">
+    <textarea id="question" placeholder="Ask a question about the page"></textarea>
+    <button id="getAnswer">Get Answer</button>
+
+    <p id="loading">⏳ Please wait... Fetching answer...</p>
+    <p><strong>Answer:</strong> <span id="answer"></span></p>
+
+    <script>
+        document.getElementById("getAnswer").addEventListener("click", function() {
+            let url = document.getElementById("url").value;
+            let question = document.getElementById("question").value;
+            let button = document.getElementById("getAnswer");
+            let loadingText = document.getElementById("loading");
+            let answerBox = document.getElementById("answer");
+
+            if (!url || !question) {
+                alert("Please enter a URL and a question.");
+                return;
+            }
+
+            // Show loading message and disable button
+            loadingText.style.display = "block";
+            button.disabled = true;
+            answerBox.innerText = "";
+
+            fetch("/get_answer", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ url: url, question: question })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Hide loading message, enable button, and show answer
+                loadingText.style.display = "none";
+                button.disabled = false;
+                answerBox.innerText = data.answer;
+            })
+            .catch(error => {
+                loadingText.style.display = "none";
+                button.disabled = false;
+                answerBox.innerText = "Error fetching answer.";
+            });
+        });
+    </script>
+
+</body>
+</html>
