@@ -54,9 +54,5 @@ The app will start on `http://127.0.0.1:5000`.
 ## 🚀 Deployment
 To deploy this project, you can use platforms like **Render, Railway, or Vercel**. If you need help with deployment, let me know!
 
-## 📝 License
-This project is open-source and free to use.
 
----
-Made with ❤️ by Roshan
 
